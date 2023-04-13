@@ -1,0 +1,152 @@
+import 'package:flutter/material.dart';
+import 'package:grubngo_app/pages/histories_page.dart';
+
+import 'package:grubngo_app/pages/products_page.dart';
+import 'package:grubngo_app/pages/profilescreen.dart';
+import 'package:grubngo_app/pages/statusdelivery_page.dart';
+
+import '../pages/home_page.dart';
+import '../pages/profile_page.dart';
+import '../pages/purchaseorder.dart';
+
+class NavigationDrawer extends StatelessWidget {
+  const NavigationDrawer({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: SingleChildScrollView(
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          buildHeader(context),
+          buildMenuItems(context),
+        ],
+      )),
+    );
+  }
+
+  Widget buildHeader(BuildContext context) {
+    return Material(
+      color: Colors.red[50],
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => ProfilePage(),
+          ));
+        },
+        child: Container(
+          color: Colors.red[50],
+          padding: EdgeInsets.only(
+            top: 24 + MediaQuery.of(context).padding.top,
+            bottom: 24,
+          ),
+          child: Column(
+            children: const [
+              CircleAvatar(
+                radius: 52,
+                backgroundImage: NetworkImage(
+                    'https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg'),
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              Text(
+                'Panama Poomin',
+                style: TextStyle(fontSize: 28, color: Colors.black),
+              ),
+              Text(
+                'panama@email.com',
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Widget buildMenuItems(BuildContext context) {
+  return Container(
+    padding: const EdgeInsets.all(12),
+    child: Wrap(
+      runSpacing: 5,
+      children: [
+        ListTile(
+            leading: const Icon(Icons.home_outlined),
+            title: Text('หน้าหลัก'),
+            onTap: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => HomePage(),
+              ));
+            }),
+        ListTile(
+            leading: const Icon(Icons.playlist_add_rounded),
+            title: Text('สินค้าของฉัน'),
+            onTap: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => ProductsPage(),
+              ));
+            }),
+        ListTile(
+            leading: const Icon(Icons.list),
+            title: Text('จัดการคำสั่งซื้อ'),
+            onTap: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => PurchaseOrderPage(),
+              ));
+            }),
+        // ListTile(
+        //     leading: const Icon(Icons.wrap_text_outlined),
+        //     title: Text('สถานะการจัดส่ง'),
+        //     onTap: () {
+        //       Navigator.of(context).pushReplacement(MaterialPageRoute(
+        //         builder: (context) => StatusDeliveryPage(),
+        //       ));
+        //     }),
+        ListTile(
+            leading: const Icon(Icons.history),
+            title: Text('ประวัติ'),
+            onTap: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => HistoryPage(),
+              ));
+            }),
+        // ListTile(
+        //     leading: const Icon(Icons.receipt_rounded),
+        //     title: Text('ประวัติการสั่งซื้อ'),
+        //     onTap: () {
+        //       Navigator.of(context).pushReplacement(MaterialPageRoute(
+        //         builder: (context) => OrderHistory(),
+        //       ));
+        //     }),
+        // const Divider(
+        //   color: Colors.black54,
+        // ),
+        // ListTile(
+        //     leading: const Icon(Icons.shopping_basket),
+        //     title: Text('รับหิ้วอาหาร'),
+        //     onTap: () {
+        //       Navigator.of(context).pushReplacement(MaterialPageRoute(
+        //         builder: (context) => RestaurantPage(),
+        //       ));
+        //     }),
+        // ListTile(
+        //     leading: const Icon(Icons.settings),
+        //     title: Text('การตั้งค่า'),
+        //     onTap: () {}),
+        // ListTile(
+        //     leading: const Icon(Icons.power_settings_new),
+        //     title: Text('ออกจากระบบ'),
+        //     onTap: () {
+        //       Navigator.of(context).pushReplacement(MaterialPageRoute(
+        //         builder: (context) => LoginPage(
+        //           title: 'Grub and Go!!',
+        //         ),
+        //       ));
+        //     }),
+      ],
+    ),
+  );
+}
