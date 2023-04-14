@@ -29,14 +29,16 @@ class _CreateAccountState extends State<CreateAccount> {
   late String _password;
 
   // late String imagerider;
-  late String FirstName;
-  late String LastName;
-  late String Gender;
-  late String TelNo;
-  late String idCard;
-  late bool status = true;
-  late String confirmImage;
-  late String role = 'rider';
+  // late String FirstName;
+  // late String LastName;
+  // late String Gender;
+  // late String TelNo;
+  // late String idCard;
+  // late bool status = true;
+  // late String confirmImage;
+  // late String role = 'rider';
+  late String IDdos;
+  late String UrlQr;
 
   bool _hidePassword = true;
 
@@ -56,13 +58,17 @@ class _CreateAccountState extends State<CreateAccount> {
   void _getRiders() async {
     var newRiders = await controller.fetchRiders();
     setState(() => rider = newRiders);
+    setState(() {
+      List<Rider> rg = newRiders;
+      print("******************** ${rg}");
+    });
     // context.read<RiderModel>().setListRider(newRiders);
   }
 
   void _addRider(String FirstName, LastName, Gender, TelNo, email, idcard,
-      imageQR, bool status, String confirmImage) async {
+      imageQR, bool status, String UrlCf) async {
     controller.addRider(FirstName, LastName, Gender, TelNo, email, idcard,
-        imageQR, status, confirmImage);
+        imageQR, status, UrlCf);
     // _getRiders();
   }
 
@@ -108,6 +114,8 @@ class _CreateAccountState extends State<CreateAccount> {
           .ref(destination)
           .child('imageQR/');
       await ref.putFile(_imageQR!);
+      UrlQr = await ref.getDownloadURL();
+      print("UrlQr*************** ${UrlQr}");
     } catch (e) {
       print('error occured');
     }
@@ -181,6 +189,8 @@ class _CreateAccountState extends State<CreateAccount> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Consumer<RiderModel>(builder: (context, value, child) {
+                  IDdos = value.Gender;
+                  print(IDdos);
                   return Text('นามสกุล' ' : ${value.LastName}');
                 }),
               ),
@@ -211,7 +221,11 @@ class _CreateAccountState extends State<CreateAccount> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Consumer<RiderModel>(builder: (context, value, child) {
-                  return Text('pic' ' : ${value.confirmImage}');
+                  return Container(
+                      child: Image.network(
+                    value.UrlCf,
+                    height: 200,
+                  ));
                 }),
               ),
               Padding(
@@ -345,8 +359,8 @@ class _CreateAccountState extends State<CreateAccount> {
 
                           Navigator.pushNamed(context, '/Login');
 
-                          _addRider(FirstName, LastName, Gender, TelNo, _email,
-                              idCard, 1, status, '12');
+                          // _addRider(FirstName, LastName, Gender, TelNo, _email,
+                          //     idCard, 1, status, '12');
 
                           var msg = "Create user";
 
@@ -400,7 +414,7 @@ class _CreateAccountState extends State<CreateAccount> {
                             // ..idCard = _idCard
                             ..email = _email
                             // ..Password = _password
-                            ..imageQR = _imageQR.toString();
+                            ..UrlQr = UrlQr;
                         }
                       },
                       child: Text('สร้างบัญชี'),

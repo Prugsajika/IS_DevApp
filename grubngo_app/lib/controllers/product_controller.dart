@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:grubngo_app/pages/addproduct_page.dart';
+
 import '../models/products_model.dart';
 import '../services/product_services.dart';
 
@@ -21,11 +23,9 @@ class ProductController {
     return products;
   }
 
-  update(Product item) {
-    services.update(item);
-  }
-
-  insert(Product item) {
-    services.insert(item);
+  void addProduct(String name, description, UrlPd, deliveryLocation, email,
+      typeOfFood, sentDate, sentTime, int price, stock, deliveryFee) async {
+    services.addProduct(name, description, UrlPd, deliveryLocation, email,
+        typeOfFood, sentDate, sentTime, price, stock, deliveryFee);
   }
 }

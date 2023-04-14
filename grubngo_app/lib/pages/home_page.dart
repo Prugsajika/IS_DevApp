@@ -1,11 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../models/riderinfo_model.dart';
 import '../widgets/drawerappbar.dart';
 import 'products_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<Rider> rider = List.empty();
+  final user = FirebaseAuth.instance.currentUser!;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,7 +24,18 @@ class HomePage extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('สวัสดี!! XXXXXXXXX'),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Consumer<RiderModel>(builder: (context, value, child) {
+            //     return Text('สวัสดี!!' ' : ${value.FirstName}');
+            //   }),
+            // ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('สวัสดี!! ' + user.email!),
+            ),
+
+            // Text('สวัสดี!! XXXXXXXXX'),
             IconButton(
               onPressed: () {
                 FirebaseAuth.instance.signOut();

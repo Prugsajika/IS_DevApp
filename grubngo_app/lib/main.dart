@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
         '/Login': (context) => LoginPage(),
         '/home': (context) => HomePage(),
         '/2': (context) => RegisterPage(),
-        '/3': (context) => CreateAccount(),
+        // '/3': (context) => CreateAccount(),
         '/4': (context) => UploadWidget(),
         '/5': (context) => AddProduct(),
         // '/11': (context) => ImageUploads()

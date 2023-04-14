@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'dart:ffi';
-
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
+import 'package:grubngo_app/pages/login_page.dart';
 import 'package:grubngo_app/widgets/uploadimage.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -29,6 +29,13 @@ class _RegisterPageState extends State<RegisterPage> {
   List<Rider> rider = List.empty();
   RiderController controller = RiderController(RiderServices());
   bool isLoading = false;
+  bool _status = false;
+  late String _email;
+
+  late String _password;
+  late String UrlQr;
+
+  bool _hidePassword = true;
 
   void initState() {
     super.initState();
@@ -46,9 +53,9 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void _addRider(String FirstName, LastName, Gender, TelNo, email, idcard,
-      imageQR, bool status, String confirmImage) async {
+      UrlQr, bool status, String UrlCf) async {
     controller.addRider(FirstName, LastName, Gender, TelNo, email, idcard,
-        imageQR, status, confirmImage);
+        UrlQr, status, UrlCf);
     _getRiders();
   }
 
@@ -59,7 +66,8 @@ class _RegisterPageState extends State<RegisterPage> {
   late String _Gender;
   late String _TelNo;
   late String _idCard;
-  late bool _status = true;
+
+  late String UrlCf;
 
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
@@ -90,8 +98,11 @@ class _RegisterPageState extends State<RegisterPage> {
           .ref(destination)
           .child('confirmImage/');
       var aaa = await ref.putFile(_confirmImage!);
+      UrlCf = await ref.getDownloadURL();
+      print(UrlCf);
+
       print("value ======== ${aaa}");
-      print(await ref.getDownloadURL());
+      // print(await ref.getDownloadURL());
     } catch (e) {
       print('error occured');
     }
@@ -113,6 +124,82 @@ class _RegisterPageState extends State<RegisterPage> {
                       Navigator.of(context).pop();
 
                       print("imagepath ${_confirmImage}");
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  File? _imageQR;
+  final ImagePicker _pickerQr = ImagePicker();
+
+  Future imgFromGalleryQR() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _imageQR = File(pickedFile.path);
+        uploadFileQR();
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  Future imgFromCameraQR() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      if (pickedFile != null) {
+        _imageQR = File(pickedFile.path);
+        uploadFileQR();
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  Future uploadFileQR() async {
+    if (_imageQR == null) return;
+    final fileName = basename(_imageQR!.path);
+    final destination = 'imageQR/$fileName';
+
+    try {
+      final ref = firebase_storage.FirebaseStorage.instance
+          .ref(destination)
+          .child('imageQR/');
+      await ref.putFile(_imageQR!);
+      UrlQr = await ref.getDownloadURL();
+      print("UrlQr*************** ${UrlQr}");
+    } catch (e) {
+      print('error occured');
+    }
+  }
+
+  void _showPickerQR(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: new Wrap(
+                children: <Widget>[
+                  new ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Gallery'),
+                      onTap: () {
+                        imgFromGalleryQR();
+                        Navigator.of(context).pop();
+                      }),
+                  new ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Camera'),
+                    onTap: () {
+                      imgFromCameraQR();
+                      Navigator.of(context).pop();
                     },
                   ),
                 ],
@@ -268,12 +355,16 @@ class _RegisterPageState extends State<RegisterPage> {
                           width: 20,
                         ),
                         Expanded(
-                            child: _confirmImage != null
-                                ? Image.file(
-                                    _confirmImage!,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Text('ถ่ายรูปคู่กับบัตรประชาชน')),
+                            child: Container(
+                          width: 200,
+                          height: 200,
+                          child: _confirmImage != null
+                              ? Image.file(
+                                  _confirmImage!,
+                                  fit: BoxFit.cover,
+                                )
+                              : Text('ถ่ายรูปคู่กับบัตรประชาชน'),
+                        )),
                         SizedBox(
                           width: 20,
                         ),
@@ -285,6 +376,122 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         SizedBox(
                           width: 20,
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: TextFormField(
+                        maxLength: 30,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(),
+                          border: OutlineInputBorder(),
+                          labelText: 'อีเมล์  ',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'กรุณาใส่อีเมล์';
+                          }
+                          return null;
+                        },
+                        onSaved: (newValue) {
+                          _email = newValue!;
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: TextFormField(
+                        maxLength: 30,
+                        obscureText: _hidePassword,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(),
+                          border: OutlineInputBorder(),
+                          labelText: 'รหัสผ่าน',
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _hidePassword = false;
+                              });
+
+                              Timer.periodic(Duration(seconds: 5), ((timer) {
+                                setState(() {
+                                  _hidePassword = true;
+                                });
+                              }));
+                            },
+                            icon: Icon(Icons.remove_red_eye),
+                          ),
+                        ),
+                        onChanged: ((value) => _password = value),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'กรุณาใส่รหัสผ่าน';
+                          }
+                          if (value.length < 5 || value.length > 30) {
+                            return 'รหัสผ่านต้องมีตัวอักษรหรือตัวเลขไม่น้อยกว่า 5 ตัว';
+                          }
+                          return null;
+                        },
+                        onSaved: (newValue) {
+                          _password = newValue!;
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: TextFormField(
+                        maxLength: 30,
+                        obscureText: _hidePassword,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(),
+                          border: OutlineInputBorder(),
+                          labelText: 'ยืนยันรหัสผ่าน',
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _hidePassword = false;
+                              });
+
+                              Timer.periodic(Duration(seconds: 5), ((timer) {
+                                setState(() {
+                                  _hidePassword = true;
+                                });
+                              }));
+                            },
+                            icon: Icon(Icons.remove_red_eye),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'กรุณายืนยันรหัสผ่าน';
+                          }
+                          if (value != _password) {
+                            return 'รหัสผ่านไม่ตรงกัน';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Card(
+                          child: Container(
+                              width: 200,
+                              height: 200,
+                              child: _imageQR != null
+                                  ? Image.file(
+                                      _imageQR!,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Text('กรุณาแนบรูป QR Code สำหรับชำระเงิน')),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            _showPickerQR(context);
+                          },
+                          child: Text("เลือกภาพ"),
                         ),
                       ],
                     ),
@@ -301,21 +508,76 @@ class _RegisterPageState extends State<RegisterPage> {
                               if (_formkey.currentState!.validate()) {
                                 _formkey.currentState!.save();
 
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('ลงทะเบียนสำเร็จ'),
-                                  ),
-                                );
-                                Navigator.pushNamed(context, '/3');
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginPage()));
+
+                                _addRider(
+                                    _FirstName,
+                                    _LastName,
+                                    _Gender,
+                                    _TelNo,
+                                    _email,
+                                    _idCard,
+                                    UrlQr,
+                                    _status,
+                                    UrlCf);
+
+                                var msg = "ลงทะเบียนสำเร็จ";
+
+                                try {
+                                  final credential = await FirebaseAuth.instance
+                                      .createUserWithEmailAndPassword(
+                                    email: _email,
+                                    password: _password,
+                                  );
+
+                                  msg = "ลงทะเบียนสำเร็จ";
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('$msg'),
+                                    ),
+                                  );
+                                } on FirebaseAuthException catch (e) {
+                                  if (e.code == 'week-password') {
+                                    print('The password provided is too weak.');
+                                    msg = 'The password provided is too weak.';
+                                  } else if (e.code == 'email-already-to-use') {
+                                    print(
+                                        'The account already exists for that email.');
+                                    msg =
+                                        'The account already exists for that email.';
+                                  }
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('$msg'),
+                                    ),
+                                  );
+                                  return;
+                                } catch (e) {
+                                  print(e);
+                                  msg = 'Error ${e.toString()}';
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('$msg'),
+                                    ),
+                                  );
+                                  // Navigator.pushNamed(context, '/Login');
+                                }
                               }
+
                               context.read<RiderModel>()
-                                ..confirmImage = _confirmImage.toString()
+                                ..UrlCf = UrlCf
                                 ..FirstName = _FirstName
                                 ..LastName = _LastName
                                 ..Gender = _Gender
                                 ..TelNo = _TelNo
                                 ..status = _status
-                                ..idCard = _idCard;
+                                ..idCard = _idCard
+                                ..email = _email
+                                ..UrlQr = UrlQr;
                             },
                             child: Text('ลงทะเบียน'),
                           ),

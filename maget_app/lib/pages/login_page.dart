@@ -212,13 +212,3 @@ class _LoginPageState extends State<LoginPage> {
         ));
   }
 }
-
-class LoginButton extends StatelessWidget {
-  @override
-  Widget build(context) {
-    return ElevatedButton(
-      onPressed: () => Navigator.pushNamed(context, '/launcher'),
-      child: Text('Login'),
-    );
-  }
-}

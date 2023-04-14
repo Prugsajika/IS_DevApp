@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:grubngo_app/pages/detailproduct_page.dart';
 
@@ -10,6 +11,7 @@ class ProductsPage extends StatefulWidget {
 }
 
 class _ProductsPageState extends State<ProductsPage> {
+  final user = FirebaseAuth.instance.currentUser!;
   String searchvalue = "";
 
   @override
@@ -63,7 +65,7 @@ class _ProductsPageState extends State<ProductsPage> {
                               fontWeight: FontWeight.bold),
                         ),
                         leading: CircleAvatar(
-                          backgroundImage: AssetImage(data['imageUrl']),
+                          backgroundImage: AssetImage(data['UrlPd']),
                         ),
                         trailing: const Icon(Icons.arrow_forward_ios),
                         onTap: () {
@@ -115,11 +117,11 @@ class _ProductsPageState extends State<ProductsPage> {
                               fontWeight: FontWeight.bold),
                         ),
                         leading: CircleAvatar(
-                          backgroundImage: AssetImage(data['imageUrl']),
+                          backgroundImage: AssetImage(data['UrlPd']),
                         ),
                         trailing: const Icon(Icons.arrow_forward_ios),
                         onTap: () {
-                          // _dreamDetail = data['detail'];
+                          // _dreamDetail = data['details'];
                           // _dreamName = data['name'];
                           // _dreamResult = data['result'];
                           // _dreamImage = data['image'];

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Rider {
-  late String id;
+  late String Riderid;
   late String imagerider;
   late String FirstName;
   late String LastName;
@@ -11,9 +11,9 @@ class Rider {
   late String email;
   late String Password;
   late String idCard;
-  late String imageQR;
+  late String UrlQr;
   late bool status;
-  late String confirmImage;
+  late String UrlCf;
   late String role;
 
   Rider(
@@ -26,9 +26,9 @@ class Rider {
     this.email,
     this.Password,
     this.idCard,
-    this.imageQR,
+    this.UrlQr,
     this.status,
-    this.confirmImage,
+    this.UrlCf,
     this.role,
   );
   factory Rider.fromJson(Map<String, dynamic> json) {
@@ -41,9 +41,9 @@ class Rider {
       json['email'] as String,
       json['Password'] as String,
       json['idCard'] as String,
-      json['imageQR'] as String,
+      json['UrlQr'] as String,
       json['status'] as bool,
-      json['confirmImage'] as String,
+      json['UrlCf'] as String,
       json['role'] as String,
     );
   }
@@ -65,8 +65,8 @@ class AllRiders {
     List<Rider> riders = s.docs.map((DocumentSnapshot ds) {
       print("documentsnapshot ${ds.data()}");
       Rider rider = Rider.fromJson(ds.data() as Map<String, dynamic>);
-      rider.id = ds.id;
-      print("riderdocumentsnapshot ${rider.id}");
+      rider.Riderid = ds.id;
+      print("riderdocumentsnapshot ${rider.Riderid}");
       return rider;
     }).toList();
 
@@ -75,7 +75,7 @@ class AllRiders {
 }
 
 class RiderModel extends ChangeNotifier {
-  // String id = '';
+  String id = '';
   // String imagerider = '';
   String FirstName = '';
   String LastName = '';
@@ -84,9 +84,9 @@ class RiderModel extends ChangeNotifier {
   String email = '';
   String Password = '';
   late String idCard;
-  String imageQR = '';
+  String UrlQr = '';
   late bool status;
-  String confirmImage = '';
+  String UrlCf = '';
   String role = '';
 
   // get getid => this.id;
@@ -143,9 +143,9 @@ class RiderModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  get getimageQR => this.imageQR;
-  set setimageQR(value) {
-    this.imageQR = value;
+  get getUrlQr => this.UrlQr;
+  set setUrlQr(value) {
+    this.UrlQr = value;
     notifyListeners();
   }
 
@@ -155,9 +155,9 @@ class RiderModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  get getconfirmImage => this.confirmImage;
-  set setconfirmImage(value) {
-    this.confirmImage = value;
+  get getUrlCf => this.UrlCf;
+  set setUrlCf(value) {
+    this.UrlCf = value;
     notifyListeners();
   }
 

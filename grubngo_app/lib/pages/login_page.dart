@@ -142,23 +142,16 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 15),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-                  child: GestureDetector(
-                    onTap: singIn,
-                    child: Container(
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: iOrangeColor,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'เข้าสู่ระบบ',
-                          style: TextStyle(
-                              color: iWhiteColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
-                        ),
+                      const EdgeInsets.symmetric(horizontal: 100, vertical: 20),
+                  child: ElevatedButton(
+                    onPressed: singIn,
+                    child: Center(
+                      child: Text(
+                        'เข้าสู่ระบบ',
+                        style: TextStyle(
+                            color: iWhiteColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
                       ),
                     ),
                   ),

@@ -48,8 +48,8 @@ class RiderController {
   // }
 
   void addRider(String FirstName, LastName, Gender, TelNo, email, idCard,
-      imageQR, bool status, String confirmImage) async {
+      imageQR, bool status, String UrlCf) async {
     services.addRider(FirstName, LastName, Gender, TelNo, email, idCard,
-        imageQR, status, confirmImage);
+        imageQR, status, UrlCf);
   }
 }
