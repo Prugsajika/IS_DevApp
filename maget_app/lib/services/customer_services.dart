@@ -5,30 +5,29 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/customer_model.dart';
 
-class FirebaseServices {
+class CustomerServices {
+  final CollectionReference _collection =
+      FirebaseFirestore.instance.collection('customer');
   Future<List<Customer>> getCustomers() async {
-    QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection('customer').get();
+    QuerySnapshot snapshot = await _collection.get();
 
     AllCustomers customers = AllCustomers.fromSnapshot(snapshot);
     return customers.customers;
   }
 
   Future<List<Customer>> getCustomersByEmail(String email) async {
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('customer')
-        .where('email', isEqualTo: email.toLowerCase().toString())
-        .get();
+    QuerySnapshot snapshot =
+        await _collection.where('email', isEqualTo: email).get();
 
-    AllCustomers customers = AllCustomers.fromSnapshot(snapshot);
-    return customers.customers;
+    AllCustomers custsnap = AllCustomers.fromSnapshot(snapshot);
+    return custsnap.customers;
   }
 
   void add(
       String name, lastName, Gender, password, telNo, idCard, email) async {
-    FirebaseFirestore.instance.collection('customer').add({
+    await _collection.add({
       'customerId': '',
-      'id': '',
+      // 'id': '',
       'name': name,
       'lastName': lastName,
       'Gender': Gender,
@@ -37,10 +36,10 @@ class FirebaseServices {
       'password': '',
       'status': true,
       'role': "buyer",
-      'email': email.toLowerCase().toString(),
+      'email': email,
     }).then((value) =>
         FirebaseFirestore.instance.collection('customer').doc(value.id).update({
-          'id': value.id,
+          // 'id': value.id,
           'customerId': value.id,
         }));
   }

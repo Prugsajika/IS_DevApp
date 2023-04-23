@@ -1,61 +1,134 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-Widget build(BuildContext context) {
-  return MaterialApp(
-    home: Scaffold(
-      drawer: Drawer(
+import '../pages/favourite_page.dart';
+import '../pages/home_page.dart';
+import '../pages/login_page.dart';
+import '../pages/orderhistory_page.dart';
+import '../pages/profile_page.dart';
+
+class NavigationDrawer extends StatelessWidget {
+  const NavigationDrawer({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: SingleChildScrollView(
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          buildHeader(context),
+          buildMenuItems(context),
+        ],
+      )),
+    );
+  }
+
+  Widget buildHeader(BuildContext context) {
+    return Material(
+      color: Colors.amber[100],
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => ProfilePage(),
+          ));
+        },
         child: Container(
-          child: ListTileTheme(
-            textColor: Colors.black,
-            iconColor: Colors.black,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Container(
-                  width: 150.0,
-                  height: 200.0,
-                  margin: const EdgeInsets.only(
-                    top: 50.0,
-                    bottom: 64.0,
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  decoration: const BoxDecoration(
-                    color: Colors.black26,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Image.asset(
-                    'assets/images/Logo.png',
-                  ),
-                ),
-                const ListTile(
-                  leading: Icon(Icons.home),
-                  title: Text('Home'),
-                ),
-                const ListTile(
-                  leading: Icon(Icons.add),
-                  title: Text('Add Product'),
-                ),
-                const ListTile(
-                  leading: Icon(Icons.shopping_cart),
-                  title: Text('Shopping Cart'),
-                ),
-                const ListTile(
-                  leading: Icon(Icons.shopping_basket),
-                  title: Text('Pre-Order'),
-                ),
-                const ListTile(
-                  leading: Icon(Icons.settings),
-                  title: Text('Setting'),
-                ),
-                const ListTile(
-                  leading: Icon(Icons.power_settings_new),
-                  title: Text('Log Out'),
-                ),
-              ],
-            ),
+          color: Colors.amber[100],
+          padding: EdgeInsets.only(
+            top: 24 + MediaQuery.of(context).padding.top,
+            bottom: 24,
+          ),
+          child: Column(
+            children: const [
+              CircleAvatar(
+                radius: 52,
+                backgroundImage: NetworkImage(
+                    'https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg'),
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              Text(
+                'Sam Poomin',
+                style: TextStyle(fontSize: 28, color: Colors.black),
+              ),
+              Text(
+                'sam@mail.com',
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              )
+            ],
           ),
         ),
       ),
+    );
+  }
+}
+
+Widget buildMenuItems(BuildContext context) {
+  return Container(
+    padding: const EdgeInsets.all(12),
+    child: Wrap(
+      runSpacing: 5,
+      children: [
+        ListTile(
+            leading: const Icon(Icons.home_outlined),
+            title: Text('หน้าหลัก'),
+            onTap: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => HomePage(),
+              ));
+            }),
+        ListTile(
+            leading: const Icon(Icons.favorite_border),
+            title: Text('รายการโปรด'),
+            onTap: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => const FavouritesPage(),
+              ));
+            }),
+        ListTile(
+            leading: const Icon(Icons.shopping_cart),
+            title: Text('ตระกร้าของฉัน'),
+            onTap: () {}),
+        // ListTile(
+        //     leading: const Icon(Icons.add_box),
+        //     title: Text('รายการสั่งซื้อ'),
+        //     onTap: () {
+        //     }),
+        ListTile(
+            leading: const Icon(Icons.receipt_rounded),
+            title: Text('รายการสั่งซื้อ'),
+            onTap: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => OrderHistory(),
+              ));
+            }),
+        const Divider(
+          color: Colors.black54,
+        ),
+        // ListTile(
+        //     leading: const Icon(Icons.shopping_basket),
+        //     title: Text('รับหิ้วอาหาร'),
+        //     onTap: () {
+        //       Navigator.of(context).pushReplacement(MaterialPageRoute(
+        //         builder: (context) => RestaurantPage(),
+        //       ));
+        //     }),
+        ListTile(
+            leading: const Icon(Icons.settings),
+            title: Text('การตั้งค่า'),
+            onTap: () {}),
+        ListTile(
+            leading: const Icon(Icons.power_settings_new),
+            title: Text('ออกจากระบบ'),
+            onTap: () {
+              FirebaseAuth.instance.signOut();
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => LoginPage(),
+              ));
+            }),
+      ],
     ),
   );
 }

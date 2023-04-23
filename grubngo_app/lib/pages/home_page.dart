@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:grubngo_app/models/products_model.dart';
 import 'package:provider/provider.dart';
 
 import '../models/riderinfo_model.dart';
@@ -15,6 +16,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Rider> rider = List.empty();
   final user = FirebaseAuth.instance.currentUser!;
+
+  void initState() {
+    super.initState();
+    _getEmail(context);
+  }
+
+  void _getEmail(BuildContext context) async {
+    // get data  MedicalDashboard
+    context.read<emailProvider>().email = user.email!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +43,8 @@ class _HomePageState extends State<HomePage> {
             // ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text('สวัสดี!! ' + user.email!),
+              child: Text(
+                  'สวัสดี!! ' + context.read<emailProvider>().email.toString()),
             ),
 
             // Text('สวัสดี!! XXXXXXXXX'),

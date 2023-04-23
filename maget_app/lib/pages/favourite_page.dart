@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:maget_app/pages/home_page.dart';
 
+import '../widgets/drawerappbar.dart';
+
 class FavouritesPage extends StatelessWidget {
   const FavouritesPage({Key? key}) : super(key: key);
 

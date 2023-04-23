@@ -1,16 +1,27 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:grubngo_app/pages/histories_page.dart';
 
 import 'package:grubngo_app/pages/products_page.dart';
 import 'package:grubngo_app/pages/profilescreen.dart';
 import 'package:grubngo_app/pages/statusdelivery_page.dart';
+import 'package:provider/provider.dart';
 
+import '../models/riderinfo_model.dart';
 import '../pages/home_page.dart';
+import '../pages/login_page.dart';
 import '../pages/profile_page.dart';
 import '../pages/purchaseorder.dart';
 
-class NavigationDrawer extends StatelessWidget {
-  const NavigationDrawer({Key? key}) : super(key: key);
+class NavigationDrawer extends StatefulWidget {
+  NavigationDrawer({Key? key}) : super(key: key);
+
+  @override
+  State<NavigationDrawer> createState() => _NavigationDrawerState();
+}
+
+class _NavigationDrawerState extends State<NavigationDrawer> {
+  final user = FirebaseAuth.instance.currentUser!;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +53,7 @@ class NavigationDrawer extends StatelessWidget {
             bottom: 24,
           ),
           child: Column(
-            children: const [
+            children: [
               CircleAvatar(
                 radius: 52,
                 backgroundImage: NetworkImage(
@@ -51,14 +62,24 @@ class NavigationDrawer extends StatelessWidget {
               SizedBox(
                 height: 12,
               ),
-              Text(
-                'Panama Poomin',
-                style: TextStyle(fontSize: 28, color: Colors.black),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Consumer<RiderModel>(builder: (context, value, child) {
+                  return Text(
+                    'สวัสดี ${value.FirstName} ${value.LastName}',
+                    style: TextStyle(fontSize: 28, color: Colors.black),
+                  );
+                }),
               ),
-              Text(
-                'panama@email.com',
-                style: TextStyle(fontSize: 16, color: Colors.black),
-              )
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Consumer<RiderModel>(builder: (context, value, child) {
+                  return Text(
+                    user.email!,
+                    style: TextStyle(fontSize: 28, color: Colors.black),
+                  );
+                }),
+              ),
             ],
           ),
         ),
@@ -111,6 +132,15 @@ Widget buildMenuItems(BuildContext context) {
             onTap: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (context) => HistoryPage(),
+              ));
+            }),
+        ListTile(
+            leading: const Icon(Icons.power_settings_new),
+            title: Text('ออกจากระบบ'),
+            onTap: () {
+              FirebaseAuth.instance.signOut();
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => LoginPage(),
               ));
             }),
         // ListTile(

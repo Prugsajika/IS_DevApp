@@ -24,22 +24,22 @@ class Body extends StatelessWidget {
                 "best delivery for you",
                 style: TextStyle(fontSize: 18),
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: List.generate(
-                      5,
-                      (index) => CatagoryCard(
-                        icon: 'launcher/icon.png',
-                        title: 'Fast Food',
-                        press: () {},
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              // SingleChildScrollView(
+              //   scrollDirection: Axis.horizontal,
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(8.0),
+              //     child: Row(
+              //       children: List.generate(
+              //         5,
+              //         (index) => CatagoryCard(
+              //           icon: 'launcher/icon.png',
+              //           title: 'Fast Food',
+              //           press: () {},
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

@@ -5,7 +5,7 @@ import '../services/customer_services.dart';
 
 class CustomerController {
   // final HttpServices services;
-  final FirebaseServices services;
+  final CustomerServices services;
   List<Customer> customers = List.empty();
 
   StreamController<bool> onSyncController = StreamController();

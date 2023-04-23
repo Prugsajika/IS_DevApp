@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/customer_controller.dart';
+import '../models/customer_model.dart';
 import '../services/customer_services.dart';
 import '../widgets/drawerappbar.dart';
 
@@ -16,7 +17,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  CustomerController controller = CustomerController(FirebaseServices());
+  CustomerController controller = CustomerController(CustomerServices());
 
   String? _Gender = null;
 
@@ -29,8 +30,6 @@ class _RegisterPageState extends State<RegisterPage> {
   late String email;
   late String password;
   late String idCard;
-  late String bank;
-  late bool status;
   late String Gender;
 
   bool _hidePassword = true;
@@ -288,9 +287,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     email: email,
                                     password: password,
                                   );
-                                  id = '';
-                                  customerId = '';
-                                  status = true;
+
                                   _addCustomers(name, lastName, Gender,
                                       password, telNo, idCard, email);
                                   msg = 'ลงทะเบียนสำเร็จ!';
@@ -298,9 +295,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(content: Text('$msg')),
                                   );
-
-                                  context.read<ProfileDetailModel>()
-                                    ..email = email;
                                 } on FirebaseAuthException catch (e) {
                                   if (e.code == 'weak-password') {
                                     print('The password provided is too weak.');
@@ -325,6 +319,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 }
                                 Navigator.pop(context);
                               }
+                              context.read<ProfileDetailModel>()..email = email;
                             },
                             child: Text('ลงทะเบียน'),
                           ),
@@ -345,85 +340,5 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
     );
-  }
-}
-
-class ProfileDetailModel extends ChangeNotifier {
-  late String customerId = '';
-  late String id = '';
-  String name = '';
-  String lastName = '';
-  String birthDay = '';
-  String email = '';
-  String profilePicture = '';
-  String password = '';
-  String idCard = '';
-  String telNo = '';
-  late bool status = false;
-
-  get getId => this.id;
-  set setId(value) {
-    this.id = value;
-    notifyListeners();
-  }
-
-  get getCustomerId => this.customerId;
-  set setCustomerId(value) {
-    this.customerId = value;
-    notifyListeners();
-  }
-
-  get getStatus => this.status;
-  set setStatus(value) {
-    this.status = value;
-    notifyListeners();
-  }
-
-  get getName => this.name;
-  set setName(value) {
-    this.name = value;
-    notifyListeners();
-  }
-
-  get getLastName => this.lastName;
-  set setLastName(value) {
-    this.lastName = value;
-    notifyListeners();
-  }
-
-  get getBirthDay => this.birthDay;
-  set setbirthDay(value) {
-    this.birthDay = value;
-    notifyListeners();
-  }
-
-  get getEmail => this.email;
-  set setEmail(value) {
-    this.email = value;
-    notifyListeners();
-  }
-
-  // get getProfilePicture => this.profilePicture;
-  // set setProfilePicture(value) {
-  //   this.profilePicture = value;
-  //   notifyListeners();
-  // }
-
-  get getPassword => this.password;
-  set setPassword(value) {
-    this.password = value;
-    notifyListeners();
-  }
-
-  get getIDCard => this.idCard;
-  set setDCard(value) {
-    this.idCard = value;
-    notifyListeners();
-  }
-
-  get getTelNo => this.telNo;
-  set setTelNo(value) {
-    this.telNo = value;
-    notifyListeners();
   }
 }

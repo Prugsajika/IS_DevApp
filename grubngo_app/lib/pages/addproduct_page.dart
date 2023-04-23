@@ -8,8 +8,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 
 import '../controllers/product_controller.dart';
+import '../models/products_model.dart';
 import '../services/product_services.dart';
 import '../widgets/drawerappbar.dart';
 
@@ -31,8 +33,8 @@ class _AddProduct extends State<AddProduct> {
   late String _sentDate;
   late String _sentTime;
   late String _typeOfFood;
-  late String _email;
-  late String UrlPd;
+
+  late String _UrlPd;
   late String _deliveryLocation;
   late int _price;
   late int _stock;
@@ -82,6 +84,7 @@ class _AddProduct extends State<AddProduct> {
     if (_imagePD == null) return;
     final fileName = basename(_imagePD!.path);
     final destination = 'imagePD/$fileName';
+    String UrlPd = '';
 
     try {
       final ref = firebase_storage.FirebaseStorage.instance
@@ -89,6 +92,9 @@ class _AddProduct extends State<AddProduct> {
           .child('imagePD/');
       await ref.putFile(_imagePD!);
       UrlPd = await ref.getDownloadURL();
+      setState(() {
+        _UrlPd = UrlPd;
+      });
       print("UrlPd*************** ${UrlPd}");
     } catch (e) {
       print('error occured');
@@ -391,7 +397,7 @@ class _AddProduct extends State<AddProduct> {
                           _addProduct(
                               _name,
                               _description,
-                              UrlPd,
+                              _UrlPd,
                               _deliveryLocation,
                               user.email,
                               _typeOfFood,
@@ -408,6 +414,19 @@ class _AddProduct extends State<AddProduct> {
                             ),
                           );
                         }
+                        context.read<ProductModel>()
+                          ..name = _name
+                          ..description = _description
+                          ..UrlPd = _UrlPd
+                          ..deliveryLocation = _deliveryLocation
+                          ..typeOfFood = _typeOfFood
+                          ..sentDate = _sentDate
+                          ..sentTime = _sentTime
+                          ..email =
+                              context.read<emailProvider>().email.toString()
+                          ..price = _price
+                          ..stock = _stock
+                          ..deliveryFee = _deliveryFee;
                       },
                       child: Text('สร้างรายการสินค้า'),
                     ),

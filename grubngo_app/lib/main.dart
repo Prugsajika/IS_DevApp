@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'pages/addproduct_page.dart';
 import 'pages/createaccount.dart';
-import 'pages/detailproduct_page.dart';
+import 'pages/productdetail_page.dart';
 import 'pages/home_page.dart';
 
 import 'pages/profilescreen.dart';
@@ -35,18 +35,21 @@ void main() async {
   // runApp(const MyApp());
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(
-        create: (context) => ListProduct(),
-      ),
+      // ChangeNotifierProvider(
+      //   create: (context) => ListProduct(),
+      // ),
       ChangeNotifierProvider(
         create: (context) => RiderModel(),
       ),
-      // ChangeNotifierProvider(
-      //   create: (context) => ListRider(),
-      // ),
-      // ChangeNotifierProvider(
-      //   create: (context) => ListTransaction(),
-      // ),
+      ChangeNotifierProvider(
+        create: (context) => ProductModel(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => emailProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => UrlPdProvider(),
+      ),
     ],
     child: const MyApp(),
   ));
@@ -72,7 +75,7 @@ class MyApp extends StatelessWidget {
         '/4': (context) => UploadWidget(),
         '/5': (context) => AddProduct(),
         // '/11': (context) => ImageUploads()
-        // '/6': (context) => DetailProductPage()
+        // '/6': (context) => ProductDetailPage()
       },
     );
   }

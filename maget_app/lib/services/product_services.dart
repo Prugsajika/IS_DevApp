@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:grubngo_app/pages/addproduct_page.dart';
 
 import '../models/products_model.dart';
 
@@ -8,46 +7,47 @@ class ProductServices {
   final CollectionReference _collection =
       FirebaseFirestore.instance.collection('products');
   final user = FirebaseAuth.instance.currentUser!;
+
   Future<List<Product>> get() async {
     QuerySnapshot snapshot = await _collection.get();
 
-    AllProducts snap = AllProducts.fromSnapshot(snapshot);
+    ListProducts snap = ListProducts.fromJason(snapshot);
 
     print('QuerySnapshot ${snap.products.length}');
     return snap.products;
   }
 
-  Future<List<Product>> getbyuser() async {
-    QuerySnapshot snapshot =
-        await _collection.where('email', isEqualTo: user.email!).get();
+  // Future<List<Product>> getbyuser() async {
+  //   QuerySnapshot snapshot =
+  //       await _collection.where('email', isEqualTo: user.email!).get();
 
-    AllProducts snap = AllProducts.fromSnapshot(snapshot);
+  //   AllProducts snap = AllProducts.fromSnapshot(snapshot);
 
-    print('QuerySnapshot ${snap.products.length}');
-    return snap.products;
-  }
+  //   print('QuerySnapshot ${snap.products.length}');
+  //   return snap.products;
+  // }
 
-  void addProduct(String name, description, UrlPd, deliveryLocation, email,
-      typeOfFood, sentDate, sentTime, int price, stock, deliveryFee) async {
-    FirebaseFirestore.instance.collection('products').add({
-      // 'id': "",
-      'name': name,
-      'description': description,
-      'UrlPd': UrlPd,
-      'deliveryLocation': deliveryLocation,
-      'email': email,
-      'typeOfFood': typeOfFood,
-      'sentDate': sentDate,
-      'sentTime': sentTime,
-      'price': price,
-      'stock': stock,
-      'deliveryFee': deliveryFee,
-      'productStatus': true,
-    }).then((value) =>
-        FirebaseFirestore.instance.collection('products').doc(value.id).update({
-          'Productid': value.id,
-        }));
-  }
+  // void addProduct(String name, description, UrlPd, deliveryLocation, email,
+  //     typeOfFood, sentDate, sentTime, int price, stock, deliveryFee) async {
+  //   FirebaseFirestore.instance.collection('products').add({
+  //     // 'id': "",
+  //     'name': name,
+  //     'description': description,
+  //     'UrlPd': UrlPd,
+  //     'deliveryLocation': deliveryLocation,
+  //     'email': email,
+  //     'typeOfFood': typeOfFood,
+  //     'sentDate': sentDate,
+  //     'sentTime': sentTime,
+  //     'price': price,
+  //     'stock': stock,
+  //     'deliveryFee': deliveryFee,
+  //     'productStatus': true,
+  //   }).then((value) =>
+  //       FirebaseFirestore.instance.collection('products').doc(value.id).update({
+  //         'Productid': value.id,
+  //       }));
+  // }
 
   // void update(Product item) async {
   //   print("update");

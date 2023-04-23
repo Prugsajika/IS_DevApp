@@ -65,11 +65,11 @@ class Product {
   }
 }
 
-class AllProducts {
+class ListProducts extends ChangeNotifier {
   final List<Product> products;
 
-  AllProducts(this.products);
-  factory AllProducts.fromSnapshot(QuerySnapshot s) {
+  ListProducts(this.products);
+  factory ListProducts.fromJason(QuerySnapshot s) {
     List<Product> products = s.docs.map((DocumentSnapshot ds) {
       Product product = Product.fromJason(ds.data() as Map<String, dynamic>);
       product.Productid = ds.id;
@@ -77,7 +77,13 @@ class AllProducts {
       return product;
     }).toList();
     print(products.length);
-    return AllProducts(products);
+    return ListProducts(products);
+  }
+
+  void addAllItem(List<Product> allItem) {
+    ListProducts(allItem);
+    print(allItem.length);
+    notifyListeners();
   }
 }
 
@@ -199,14 +205,14 @@ class ProductModel extends ChangeNotifier {
 //   // }
 // }
 
-class emailProvider extends ChangeNotifier {
-  String email = "";
-  get getemail => this.email;
-  set setemail(value) {
-    this.email = value;
-    notifyListeners();
-  }
-}
+// class emailProvider extends ChangeNotifier {
+//   String email = "";
+//   get getemail => this.email;
+//   set setemail(value) {
+//     this.email = value;
+//     notifyListeners();
+//   }
+// }
 
 class UrlPdProvider extends ChangeNotifier {
   String UrlPd = "";

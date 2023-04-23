@@ -40,9 +40,9 @@ class _HomePageState extends State<HomePage> {
   TimeOfDay _endTime = TimeOfDay.now();
 
   void initState() {
+    _getEmail(context);
     _getProduct(context);
     super.initState();
-    _getEmail(context);
     context.read<ListProducts>().addAllItem(products);
     controller.onSync.listen((bool syncState) => setState(() {
           isLoading = syncState;
@@ -56,11 +56,10 @@ class _HomePageState extends State<HomePage> {
 
   void _getProduct(BuildContext context) async {
     var newProduct = await controller.fetchProduct();
-    print('chk-- ${newProduct}');
-    print('chk--product ${products}');
+    print('chk ${newProduct}');
     setState(() => products = newProduct);
 
-    context.read<ProductModel>().getListProduct = newProduct;
+    // context.read<ProductModel>().getListProduct = newProduct;
   }
 
   @override
@@ -97,27 +96,43 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       drawer: NavigationDrawer(),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Consumer<ProductModel>(
-            builder: (context, ProductModel data, child) {
-          return data.getListProduct.length != 0
-              ? ListView.builder(
-                  itemCount: data.getListProduct.length,
-                  itemBuilder: (context, index) {
-                    print(data.getListProduct.length);
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Explore",
+            style: Theme.of(context)
+                .textTheme
+                .headline4!
+                .copyWith(fontWeight: FontWeight.w500, color: Colors.black),
+          ),
+          const Text(
+            "best delivery for you",
+            style: TextStyle(fontSize: 18),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Consumer<ListProducts>(
+                builder: (context, ListProducts data, child) {
+              return data.products.length != 0
+                  ? ListView.builder(
+                      itemCount: data.products.length,
+                      itemBuilder: (context, index) {
+                        print(data.products.length);
 
-                    return CardList(data.getListProduct[index], index);
-                  })
-              : GestureDetector(
-                  child: Center(
-                      child: Text(
-                  "ไม่มีรายการสินค้า",
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                )));
-        }),
+                        return CardList(data.products[index], index);
+                      })
+                  : GestureDetector(
+                      child: Center(
+                          child: Text(
+                      "ไม่มีรายการสินค้า",
+                      style: TextStyle(
+                        color: Colors.amber,
+                      ),
+                    )));
+            }),
+          ),
+        ],
       ),
     );
   }

@@ -1,0 +1,48 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "grubngo_app",
+            "cwd": "grubngo_app",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "grubngo_app (profile mode)",
+            "cwd": "grubngo_app",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "grubngo_app (release mode)",
+            "cwd": "grubngo_app",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "maget_app",
+            "cwd": "maget_app",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "maget_app (profile mode)",
+            "cwd": "maget_app",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "maget_app (release mode)",
+            "cwd": "maget_app",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
